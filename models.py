@@ -17,7 +17,7 @@ class Venue(db.Model):
     shows = db.relationship('Show', backref="venue", lazy=True)
 
     def __repr__(self):
-        return '<Venue {}}>'.format(self.name)
+        return '<Venue {}>'.format(self.name)
 
 
 class Artist(db.Model):

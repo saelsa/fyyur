@@ -61,8 +61,8 @@ def index():
 @app.route('/venues')
 def venues():
   all_areas = Venue.query.with_entities(func.count(Venue.id), Venue.city, Venue.state).group_by(Venue.city, Venue.state).all()
-
   data = []
+
   for area in all_areas:
     area_venues = Venue.query.filter_by(state=area.state).filter_by(city=area.city).all()
     venue_data = []
@@ -70,15 +70,13 @@ def venues():
       venue_data.append({
         "id": venue.id,
         "name": venue.name, 
-        "num_upcoming_shows": 0
+        "num_upcoming_shows": len(db.session.query(Show).filter(Show.venue_id==1).filter(Show.start_time>datetime.now()).all())
       })
     data.append({
       "city": area.city,
       "state": area.state, 
       "venues": venue_data
     })
-
-  # TODO:  num_shows should be aggregated based on number of upcoming shows per venue.
 
   return render_template('pages/venues.html', areas=data);
 
@@ -146,7 +144,7 @@ def show_venue(venue_id):
     "past_shows_count": len(past_shows),
     "upcoming_shows_count": len(upcoming_shows),
   }
-  
+
   return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
@@ -202,17 +200,8 @@ def delete_venue(venue_id):
 #  ----------------------------------------------------------------
 @app.route('/artists')
 def artists():
-  # TODO: replace with real data returned from querying the database
-  data=[{
-    "id": 4,
-    "name": "Guns N Petals",
-  }, {
-    "id": 5,
-    "name": "Matt Quevedo",
-  }, {
-    "id": 6,
-    "name": "The Wild Sax Band",
-  }]
+  data = db.session.query(Artist).all()
+
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])

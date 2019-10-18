@@ -51,6 +51,11 @@ block content %}
     </p>
     {% endif %}
     <div>
+      <a href="/venues/{{ venue.id }}/edit">
+        <button class="btn btn-default btn-sm">
+          Edit
+        </button>
+      </a>
       <button
         id="delete-venue"
         data-id="{{ venue.id }}"
